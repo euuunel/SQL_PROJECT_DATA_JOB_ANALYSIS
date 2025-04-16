@@ -6,7 +6,7 @@
             "port": 5432,
             "driver": "PostgreSQL",
             "name": "sql_course",
-            "database": "sql_course",
+            "database": "postgres",
             "username": "postgres"
         }
     ]
