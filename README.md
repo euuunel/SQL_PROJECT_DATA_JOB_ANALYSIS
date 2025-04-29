@@ -248,3 +248,77 @@ From the analysis, several general insights emerged:
 
 ### Closing Thoughts
 This real-world SQL project represented a pivotal step in my data analytics development. Coming straight from certification training, the practical experience substantially elevated both my technical SQL proficiency and professional self-assurance. The analysis uncovered crucial market insights - especially SQL's industry dominance and the premium placed on specialized skills - which now actively inform my ongoing education and career planning. These results provide a strategic roadmap: aspiring data professionals can gain a competitive advantage by concentrating on high-impact, sought-after abilities, all while maintaining the adaptive learning approach essential in our rapidly changing field.
+
+
+
+# NEW
+# Introduction
+Data Analyst Job Market Analysis - Asia-Pacific Focus *(Specifically: Singapore, Hongkong, Thailand, Philippines, Japan, Taiwan, China, South Korea, Australia, New Zealand)*
+
+This project explores the Data Analyst job market in the Asia-Pacific region. It highlights job availability, top-paying companies, in-demand skills, and remote vs on-site work trends. The goal is to help aspiring and current data analysts identify career opportunities and target the most valuable skills.
+
+## Tools Used
+- **SQL (PostgreSQL)** - Core tool for data extraction and analysis
+- **Visual Studio Code** - Primary code editor
+- **Power BI** - For creating professional visualizations
+- **Git & GitHub** - For version control and project sharing
+
+## Analysis Breakdown
+
+### 1. Job Availability by Location
+Analyzed the number of job postings across different countries to determine the regions with the **highest opportunities**.
+
+**Findings:**
+- **Australia, Japan,** and **Singapore** lead in job availability.
+- Mature markets offer significantly more roles compared to emerging markets.
+
+**Visualization:**  
+Bar chart showing job count per country.
+
+### 2. Top-Paying Companies for Data Analyst Roles
+Filtered companies offering the **highest salaries** based on available job posting data.
+
+**Findings:**
+- Top-paying companies are largely in **finance and technology sectors**.
+- Companies investing in **digital transformation** are leading in compensation packages.
+
+**Visualization:**  
+Bar chart displaying the top 10 companies by average salary.
+
+### 3. In-Demand Skills for Data Analysts
+Identified the skills most frequently required in job postings.
+
+**Findings:**
+- **SQL, Python, Excel, and Tableau** are consistently top-listed skills.
+- **Data Visualization and Business Intelligence** tools continue to grow in demand.
+
+**Visualization:**  
+Horizontal bar chart displaying the top 10 most in-demand skills.
+
+### 4. Work Arrangement: Remote vs On-Site
+Compared the distribution between remote and on-site job opportunities.
+
+**Findings:**
+- **On-site roles** are more common, but remote opportunities are expanding, especially in Australia and Singapore.
+- **Remote roles** often require a higher degree of technical self-sufficiency.
+
+**Visualization:**  
+Donut chart illustrating remote vs. on-site job distribution.
+
+# Key Insights
+- **Australia, Japan, and Singapore** offer the most **Data Analyst opportunities**.
+- **Top-paying employers** are focused on **finance and digital technologies**.
+- Core technical skills such as **SQL and Python** are essential.
+- **Remote job** opportunities are **increasing** but are still **secondary** to **on-site roles**.
+
+# Lessons Learned
+This project enhanced my technical and analytical skills:
+
+- Advanced SQL techniques (joins, aggregations, CTEs)
+- Data storytelling with Power BI visualizations
+- Translating technical results into business insights
+- Structuring a data analysis project from start to finish
+
+# Conclusion
+This analysis provides a strategic view of the Asia-Pacific data analyst market.  
+It emphasizes the importance of focusing on high-opportunity countries, targeting leading employers, and building strong technical foundations.

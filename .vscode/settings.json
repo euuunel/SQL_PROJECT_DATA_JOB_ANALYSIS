@@ -5,8 +5,8 @@
             "server": "localhost",
             "port": 5432,
             "driver": "PostgreSQL",
-            "name": "sql_course",
-            "database": "postgres",
+            "name": "SQL_project",
+            "database": "sql_course",
             "username": "postgres"
         }
     ]
