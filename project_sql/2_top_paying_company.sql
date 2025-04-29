@@ -1,3 +1,9 @@
+/*
+Identifies companies offering the most lucrative roles, with firms like Meta, 
+SmartAsset, and AT&T leading in average salary offerings—some reaching above 
+$650,000 per year, especially for remote positions.
+*/
+
 SELECT
     jpf.job_title_short,                  -- Short title of the job
     jpf.job_country,                      -- Location of the job
@@ -24,12 +30,7 @@ ORDER BY jpf.salary_year_avg DESC;
 
 
 /*
-Here's the breakdown of the most demanded skills for data analysts in 2023, based on job postings:
-SQL is leading with a bold count of 8.
-Python follows closely with a bold count of 7.
-Tableau is also highly sought after, with a bold count of 6.
-Other skills like R, Snowflake, Pandas, and Excel show varying degrees of demand.
-
+----- RESULTS -----
 [
   {
     "job_title_short": "Data Analyst",

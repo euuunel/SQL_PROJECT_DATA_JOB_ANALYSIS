@@ -267,7 +267,17 @@ This project explores the Data Analyst job market in the Asia-Pacific region. It
 
 ### 1. Job Availability by Location
 Analyzed the number of job postings across different countries to determine the regions with the **highest opportunities**.
-
+```sql
+SELECT
+	job_country,                      
+	COUNT(job_country) as job_count   
+FROM job_postings_fact
+WHERE job_country IN ('Singapore', 'Hongkong', 'Thailand',
+'Philippines', 'Japan', 'Taiwan', 'China','South Korea', 
+'Australia', 'New Zealand')
+GROUP BY job_country
+ORDER BY job_count DESC;
+```
 **Findings:**
 - **Australia, Japan,** and **Singapore** lead in job availability.
 - Mature markets offer significantly more roles compared to emerging markets.
@@ -277,7 +287,31 @@ Bar chart showing job count per country.
 
 ### 2. Top-Paying Companies for Data Analyst Roles
 Filtered companies offering the **highest salaries** based on available job posting data.
-
+```sql
+SELECT
+    jpf.job_title_short,                  
+    jpf.job_country,                      
+    jpf.job_schedule_type,              
+    jpf.salary_year_avg,                  
+    cd.name AS company_name               
+FROM job_postings_fact AS jpf
+LEFT JOIN company_dim AS cd 
+    ON jpf.company_id = cd.company_id
+WHERE 
+    jpf.job_title_short = 'Data Analyst' 
+    AND jpf.job_country IN ('Singapore', 'Hongkong', 'Thailand',
+    'Philippines', 'Japan', 'Taiwan', 'China', 
+    'South Korea','Australia', 'New Zealand')
+    AND jpf.salary_year_avg IS NOT NULL
+    AND jpf.job_schedule_type = 'Full-time'
+GROUP BY 
+    jpf.job_title_short, 
+    jpf.job_country, 
+    jpf.job_schedule_type, 
+    jpf.salary_year_avg, 
+    cd.name
+ORDER BY jpf.salary_year_avg DESC;
+```
 **Findings:**
 - Top-paying companies are largely in **finance and technology sectors**.
 - Companies investing in **digital transformation** are leading in compensation packages.
@@ -287,7 +321,29 @@ Bar chart displaying the top 10 companies by average salary.
 
 ### 3. In-Demand Skills for Data Analysts
 Identified the skills most frequently required in job postings.
+```sql
+WITH RankedSkills AS (
+SELECT 
+skills,
+COUNT(sjd.job_id) AS demand_count,
+RANK() OVER (ORDER BY COUNT(sjd.job_id) DESC) AS ranking
+FROM job_postings_fact AS jpf
+INNER JOIN skills_job_dim AS sjd ON jpf.job_id = sjd.job_id
+INNER JOIN skills_dim AS sd ON sjd.skill_id = sd.skill_id
+WHERE
+	job_title_short = 'Data Analyst' 
+	AND job_country IN ('Singapore', 'Hongkong', 'Thailand',
+    'Philippines', 'Japan', 'Taiwan', 'China',
+    'South Korea', 'Australia', 'New Zealand')
+GROUP BY
+	skills
+)
 
+SELECT *
+FROM RankedSkills
+WHERE ranking <= 5
+ORDER BY ranking;
+```
 **Findings:**
 - **SQL, Python, Excel, and Tableau** are consistently top-listed skills.
 - **Data Visualization and Business Intelligence** tools continue to grow in demand.
@@ -297,7 +353,21 @@ Horizontal bar chart displaying the top 10 most in-demand skills.
 
 ### 4. Work Arrangement: Remote vs On-Site
 Compared the distribution between remote and on-site job opportunities.
-
+```sql
+SELECT 
+    job_country AS country,
+    COUNT(CASE WHEN job_work_from_home = FALSE THEN job_id END) AS on_site,
+    COUNT(CASE WHEN job_work_from_home = TRUE THEN job_id END) AS remote
+FROM job_postings_fact
+WHERE 
+    job_title_short = 'Data Analyst' AND
+    job_country IN (
+        'Singapore', 'Hongkong', 'India', 'Philippines', 
+        'Japan', 'South Korea', 'Australia', 'Malaysia'
+    )
+GROUP BY job_country
+ORDER BY country;
+```
 **Findings:**
 - **On-site roles** are more common, but remote opportunities are expanding, especially in Australia and Singapore.
 - **Remote roles** often require a higher degree of technical self-sufficiency.

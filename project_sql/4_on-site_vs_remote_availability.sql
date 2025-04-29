@@ -1,38 +1,60 @@
-SELECT
-    CASE 
-        WHEN job_work_from_home = TRUE THEN 'Remote'
-        ELSE 'On-site'
-    END AS work_arrangement,
-    COUNT(job_id) AS job_count
+/*
+Compares work formats, showing a strong presence of remote-friendly roles, which 
+reflects a growing trend in job flexibility for data professionals across the region.
+*/
+
+SELECT 
+    job_country AS country,
+    COUNT(CASE WHEN job_work_from_home = FALSE THEN job_id END) AS on_site,
+    COUNT(CASE WHEN job_work_from_home = TRUE THEN job_id END) AS remote
 FROM job_postings_fact
 WHERE 
-    job_title_short = 'Data Analyst'
-    AND job_country IN ('Singapore', 'Hongkong', 'Thailand',
-                        'Philippines', 'Japan', 'Taiwan', 'China',
-                        'South Korea', 'Australia', 'New Zealand')
-GROUP BY 
-    CASE 
-        WHEN job_work_from_home = TRUE THEN 'Remote'
-        ELSE 'On-site'
-    END
-ORDER BY 
-    job_count DESC;
+    job_title_short = 'Data Analyst' AND
+    job_country IN (
+        'Singapore', 'Hongkong', 'India', 'Philippines', 
+        'Japan', 'South Korea', 'Australia', 'Malaysia'
+    )
+GROUP BY job_country
+ORDER BY country;
 
 
 /*
-Here's a breakdown of the results for top paying skills for Data Analysts:
-- High Demand for Big Data & ML Skills: Top salaries are commanded by analysts skilled in big data technologies (PySpark, Couchbase), machine learning tools (DataRobot, Jupyter), and Python libraries (Pandas, NumPy), reflecting the industry's high valuation of data processing and predictive modeling capabilities.
-- Software Development & Deployment Proficiency: Knowledge in development and deployment tools (GitLab, Kubernetes, Airflow) indicates a lucrative crossover between data analysis and engineering, with a premium on skills that facilitate automation and efficient data pipeline management.
-- Cloud Computing Expertise: Familiarity with cloud and data engineering tools (Elasticsearch, Databricks, GCP) underscores the growing importance of cloud-based analytics environments, suggesting that cloud proficiency significantly boosts earning potential in data analytics.
-
+----- RESULTS -----
 [
   {
-    "work_arrangement": "On-site",
-    "job_count": "15385"
+    "country": "Australia",
+    "on_site": "1507",
+    "remote": "153"
   },
   {
-    "work_arrangement": "Remote",
-    "job_count": "989"
+    "country": "India",
+    "on_site": "5083",
+    "remote": "1050"
+  },
+  {
+    "country": "Japan",
+    "on_site": "340",
+    "remote": "42"
+  },
+  {
+    "country": "Malaysia",
+    "on_site": "2486",
+    "remote": "42"
+  },
+  {
+    "country": "Philippines",
+    "on_site": "4164",
+    "remote": "606"
+  },
+  {
+    "country": "Singapore",
+    "on_site": "6579",
+    "remote": "63"
+  },
+  {
+    "country": "South Korea",
+    "on_site": "330",
+    "remote": "5"
   }
 ]
 */
