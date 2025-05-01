@@ -374,10 +374,10 @@ ORDER BY country;
 Donut chart illustrating remote vs. on-site job distribution.
 
 ### Complete Data Visualization for Data Job Analysis in the Year 2023
-![Data Visual Using PowerBI](assets\Data_visual_APAC_Data_Job_Analysis_Y2023.png)
+![Data Visual Using PowerBI](assets/Data_visual_APAC_Data_Job_Analysis_Y2023.png)
 
 *The data visual was created using Power BI with data pulled from available datasets. The goal is to explore Power BI further and enhance my skills.*
-[Download Power BI File](assets\APAC_Data_Analyst_Job_Insights_and_Opportunities.pbix)
+[Download Power BI File](assets/APAC_Data_Analyst_Job_Insights_and_Opportunities.pbix)
 
 # Key Insights
 - **Australia, Japan, and Singapore** offer the most **Data Analyst opportunities**.
