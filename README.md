@@ -19,7 +19,7 @@ To thoroughly explore the data analyst job market, I utilized a range of essenti
 - **SQL:** Served as the core of my analysis, enabling me to extract and analyze key insights from the data.
 - **PostgreSQL:** My database management system of choice, well-suited for handling job posting datasets.
 - **Visual Studio Code:** My go-to for database management and executing SQL queries.
-- **PowerBI:** Used to create easy-to-understand visualizations that bring data insights to life.
+- **PowerBI:** Used to create easy-to-understand visualizations that bring data insights to life. (To follow, still ongoing practicing of DAX)
 - **Git & GitHub:** Essential for version control and sharing my SQL scripts and analysis, ensuring collaboration and project tracking.
 
 # The Analysis
@@ -335,8 +335,7 @@ WHERE
 	AND job_country IN ('Singapore', 'Hongkong', 'Thailand',
     'Philippines', 'Japan', 'Taiwan', 'China',
     'South Korea', 'Australia', 'New Zealand')
-GROUP BY
-	skills
+GROUP BYskills
 )
 
 SELECT *
@@ -361,10 +360,9 @@ SELECT
 FROM job_postings_fact
 WHERE 
     job_title_short = 'Data Analyst' AND
-    job_country IN (
-        'Singapore', 'Hongkong', 'India', 'Philippines', 
-        'Japan', 'South Korea', 'Australia', 'Malaysia'
-    )
+    job_country IN ('Singapore', 'Hongkong', 'Thailand',
+    'Philippines', 'Japan', 'Taiwan', 'China',
+    'South Korea', 'Australia', 'New Zealand')
 GROUP BY job_country
 ORDER BY country;
 ```
@@ -374,6 +372,12 @@ ORDER BY country;
 
 **Visualization:**  
 Donut chart illustrating remote vs. on-site job distribution.
+
+### Complete Data Visualization for Data Job Analysis in the Year 2023
+![Data Visual Using PowerBI](assets\Data_visual_APAC_Data_Job_Analysis_Y2023.png)
+
+*The data visual was created using Power BI with data pulled from available datasets. The goal is to explore Power BI further and enhance my skills.*
+[Download Power BI File](assets\APAC_Data_Analyst_Job_Insights_and_Opportunities.pbix)
 
 # Key Insights
 - **Australia, Japan, and Singapore** offer the most **Data Analyst opportunities**.

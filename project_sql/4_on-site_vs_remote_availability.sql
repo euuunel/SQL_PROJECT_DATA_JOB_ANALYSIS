@@ -10,10 +10,9 @@ SELECT
 FROM job_postings_fact
 WHERE 
     job_title_short = 'Data Analyst' AND
-    job_country IN (
-        'Singapore', 'Hongkong', 'India', 'Philippines', 
-        'Japan', 'South Korea', 'Australia', 'Malaysia'
-    )
+    job_country IN ('Singapore', 'Hongkong', 'Thailand',
+    'Philippines', 'Japan', 'Taiwan', 'China',
+    'South Korea', 'Australia', 'New Zealand')
 GROUP BY job_country
 ORDER BY country;
 

@@ -15,10 +15,9 @@ INNER JOIN skills_dim AS sd ON sjd.skill_id = sd.skill_id
 WHERE
 	job_title_short = 'Data Analyst' 
 	AND job_country IN ('Singapore', 'Hongkong', 'Thailand',
-                        'Philippines', 'Japan', 'Taiwan', 'China',
-                        'South Korea', 'Australia', 'New Zealand')
-GROUP BY
-	skills
+  'Philippines', 'Japan', 'Taiwan', 'China',
+  'South Korea', 'Australia', 'New Zealand')
+GROUP BY skills
 )
 
 SELECT *
