@@ -9,7 +9,7 @@ SELECT
 	job_country,                      -- Location of the job
 	COUNT(job_country) as job_count   -- Count of the job per country
 FROM job_postings_fact
-WHERE job_country IN ('Singapore', 'Hongkong', 'Thailand',
+WHERE job_country IN ('Singapore', 'Hong Kong', 'Thailand',
 'Philippines', 'Japan', 'Taiwan', 'China','South Korea', 
 'Australia', 'New Zealand')
 GROUP BY job_country

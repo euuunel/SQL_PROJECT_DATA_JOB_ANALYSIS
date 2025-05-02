@@ -11,11 +11,10 @@ SELECT
     jpf.salary_year_avg,                  -- Average yearly salary
     cd.name AS company_name               -- Company name
 FROM job_postings_fact AS jpf
-LEFT JOIN company_dim AS cd 
-    ON jpf.company_id = cd.company_id
+LEFT JOIN company_dim AS cd ON jpf.company_id = cd.company_id
 WHERE 
     jpf.job_title_short = 'Data Analyst' 
-    AND jpf.job_country IN ('Singapore', 'Hongkong', 'Thailand',
+    AND jpf.job_country IN ('Singapore', 'Hong Kong', 'Thailand',
                         'Philippines', 'Japan', 'Taiwan', 'China',
                         'South Korea', 'Australia', 'New Zealand')
     AND jpf.salary_year_avg IS NOT NULL

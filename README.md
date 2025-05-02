@@ -1,259 +1,5 @@
 # Introduction
-📊 Explore the data job market with a focus on data analyst roles. This project highlights 💰 top-paying positions, 🔥 the most sought-after skills, and 📈 where strong demand aligns with high salaries in data analytics.
-
-🔍 SQL queries? Check them out here: [project_sql](/project_sql/)
-
-# Background
-Motivated by a desire to better understand the data analyst job market, this project was created to identify top-paying roles and in-demand skills—making it easier for others to find the most suitable opportunities.
-
-### The questions I wanted to answer through my SQL queries were:
-1. What are the top-paying data analyst jobs?
-2. What skills are required for these top-paying jobs?
-3. What skills are most in demand for data analysts?
-4. Which skills are associated with higher salaries?
-5. What are the most optimal skills to learn?
-
-# Tools I Used
-To thoroughly explore the data analyst job market, I utilized a range of essential tools:
-
-- **SQL:** Served as the core of my analysis, enabling me to extract and analyze key insights from the data.
-- **PostgreSQL:** My database management system of choice, well-suited for handling job posting datasets.
-- **Visual Studio Code:** My go-to for database management and executing SQL queries.
-- **PowerBI:** Used to create easy-to-understand visualizations that bring data insights to life. (To follow, still ongoing practicing of DAX)
-- **Git & GitHub:** Essential for version control and sharing my SQL scripts and analysis, ensuring collaboration and project tracking.
-
-# The Analysis
-Each query for this project aimed at investigating specific aspects of the data analyst job market. Here’s how I approached each question:
-
-### 1. Top Paying Data Analyst Jobs
-To pinpoint the highest-paying roles, I filtered data analyst positions by average yearly salary and location, specifically targeting remote jobs. This query reveals the top-paying opportunities in the field.
-
-```sql
-SELECT	
-	job_id,
-	job_title,
-	job_location,
-	job_schedule_type,
-	salary_year_avg,
-	job_posted_date,
-  name AS company_name
-FROM job_postings_fact
-LEFT JOIN company_dim 
-ON job_postings_fact.company_id = company_dim.company_id
-WHERE
-    job_title_short = 'Data Analyst' AND 
-    job_location = 'Anywhere' AND 
-    salary_year_avg IS NOT NULL
-ORDER BY
-    salary_year_avg DESC
-LIMIT 10;
-```
-Here's the breakdown of the top data analyst jobs in 2023:
-
-- **Wide Salary Range:** Top 10 paying data analyst roles span from **$184,000** to **$650,000**, indicating significant salary potential in the field.
-- **Diverse Employers:** Companies like SmartAsset, Meta, and AT&T are among those offering high salaries, showing a broad interest across different industries.
-- **Job Title Variety:** There's a high diversity in job titles, from Data Analyst to Director of Analytics, reflecting varied roles and specializations within data analytics.
-
-![Top Paying Roles](assets/1_top_paying_jobs.png)
-*Bar graph visualizing the salary for the top 10 salaries for data analysts. The graph is created using PowerBI with data pulled from the available datasets.*
-
-### 2. Skills for Top Paying Jobs
-To identify the most in-demand skills for high-paying positions, I merged job postings data with skills data. This analysis reveals the key competencies employers prioritize for the highest-compensation roles in the field.
-
-```sql
-WITH top_paying_jobs AS (
-SELECT	
-	job_id,
-	job_title,
-	salary_year_avg,
-	name as company_name
-FROM job_postings_fact
-LEFT JOIN company_dim
-ON job_postings_fact.company_id = company_dim.company_id
-WHERE
-    job_title_short = 'Data Analyst' AND 
-    job_location = 'Anywhere' AND 
-    salary_year_avg IS NOT NULL
-ORDER BY
-    salary_year_avg DESC
-LIMIT 10
-)
-
-SELECT 
-    top_paying_jobs.*,
-    skills
-FROM top_paying_jobs
-INNER JOIN skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
-ORDER BY salary_year_avg DESC
-```
-
-Here's the breakdown of the most demanded skills for the top 10 highest paying data analyst jobs in 2023:
-
-- **SQL** is leading with a bold count of 8.
-- **Python** follows closely with a bold count of 7.
-- **Tableau** is also highly sought after, with a bold count of 6. Other skills like R, Snowflake, Pandas, and Excel show varying degrees of demand.
-
-![Top Demand skills for highest paying job](assets/Top_Paying_Data_Job_skill.png)
-
-*Tree map visualizing the salary for the top 10 salaries for data analysts. The graph is created using PowerBI with data pulled from the available datasets.*
-
-
-### 3. In-Demand Skills for Data Analyst
-This analysis pinpointed the most in-demand skills by identifying those frequently mentioned in job postings, highlighting key focus areas for professionals.
-
-```sql
-SELECT 
-    skills,
-    COUNT(skills_job_dim.job_id) AS demand_count
-FROM job_postings_fact
-INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
-WHERE
-    job_title_short = 'Data Analyst' 
-    AND job_work_from_home = True 
-GROUP BY
-    skills
-ORDER BY
-    demand_count DESC
-LIMIT 5;
-```
-Here's the breakdown of the most demanded skills for data analysts in 2023
-
-- **SQL** and **Excel** remain fundamental, emphasizing the need for strong foundational skills in data processing and spreadsheet manipulation.
-- **Programming** and **Visualization Tools** like **Python**, **Tableau**, and **PowerBI** are essential, pointing towards the increasing importance of technical skills in data storytelling and decision support.
-
-![Top 5 Data Analyst Skills](assets/Data_Analyst_in_demand_skills.png)
-
-*Donut-Chart of the demand for the top 5 skills in data analyst job postings*
-
-### 4. Skills Based on Salary
-Exploring the average salaries associated with different skills revealed which skills are the highest paying.
-
-```sql
-SELECT 
-    skills,
-    ROUND(AVG(salary_year_avg), 0) AS avg_salary
-FROM job_postings_fact
-INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
-WHERE
-    job_title_short = 'Data Analyst'
-    AND salary_year_avg IS NOT NULL
-    AND job_work_from_home = True 
-GROUP BY
-    skills
-ORDER BY
-    avg_salary DESC
-LIMIT 25;
-```
-
-Here's a breakdown of the results for top paying skills for Data Analysts:
-
-- **High Demand for Big Data & ML Skills:** Top salaries are commanded by analysts skilled in big data technologies (PySpark, Couchbase), machine learning tools (DataRobot, Jupyter), and Python libraries (Pandas, NumPy), reflecting the industry's high valuation of data processing and predictive modeling capabilities.
-- **Software Development & Deployment Proficiency:** Knowledge in development and deployment tools (GitLab, Kubernetes, Airflow) indicates a lucrative crossover between data analysis and engineering, with a premium on skills that facilitate automation and efficient data pipeline management.
-- **Cloud Computing Expertise:** Familiarity with cloud and data engineering tools (Elasticsearch, Databricks, GCP) underscores the growing importance of cloud-based analytics environments, suggesting that cloud proficiency significantly boosts earning potential in data analytics.
-
-![Top Paying Skills](assets/Top_Paying_Skills.png)
-*Pie chart of the average salary for the top 5 paying skills for data analysts*
-
-| Skills        | Average Salary ($) |
-|---------------|--------------------|
-| pyspark       | 208,172            |
-| bitbucket     | 189,155            |
-| couchbase     | 160,515            |
-| watson        | 160,515            |
-| datarobot     | 155,486            |
-| gitlab        | 154,500            |
-| swift         | 153,750            |
-| jupyter       | 152,777            |
-| pandas        | 151,821            |
-| elasticsearch | 145,000            |
-*Table view of the average salary for the top 10 paying skills for data analysts*
-
-### 5. Most Optimal Skills to Learn
-Combining insights from demand and salary data, this query aimed to pinpoint skills that are both in high demand and have high salaries, offering a strategic focus for skill development.
-
-```sql
-SELECT 
-    skills_dim.skill_id,
-    skills_dim.skills,
-    COUNT(skills_job_dim.job_id) AS demand_count,
-    ROUND(AVG(job_postings_fact.salary_year_avg), 0) AS avg_salary
-FROM job_postings_fact
-INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
-WHERE
-    job_title_short = 'Data Analyst'
-    AND salary_year_avg IS NOT NULL
-    AND job_work_from_home = True 
-GROUP BY
-    skills_dim.skill_id
-HAVING
-    COUNT(skills_job_dim.job_id) > 10
-ORDER BY
-    avg_salary DESC,
-    demand_count DESC
-LIMIT 25;
-```
-
-| Skill ID | Skills     | Demand Count | Average Salary ($) |
-|----------|------------|---------------|---------------------|
-| 8        | go         | 27            | 115,320             |
-| 234      | confluence | 11            | 114,210             |
-| 97       | hadoop     | 22            | 113,193             |
-| 80       | snowflake  | 37            | 112,948             |
-| 74       | azure      | 34            | 111,225             |
-| 77       | bigquery   | 13            | 109,654             |
-| 76       | aws        | 32            | 108,317             |
-| 4        | java       | 17            | 106,906             |
-| 194      | ssis       | 12            | 106,683             |
-| 233      | jira       | 20            | 104,918             |
-*Table of the most optimal skills for data analyst sorted by salary*
-
-Here's a breakdown of the most optimal skills for Data Analysts in 2023:
-
-- **High-Demand Programming Languages:** Python and R stand out for their high demand, with demand counts of 236 and 148 respectively. Despite their high demand, their average salaries are around $101,397 for Python and $100,499 for R, indicating that proficiency in these languages is highly valued but also widely available.
-- **Cloud Tools and Technologies:** Skills in specialized technologies such as Snowflake, Azure, AWS, and BigQuery show significant demand with relatively high average salaries, pointing towards the growing importance of cloud platforms and big data technologies in data analysis.
-- **Business Intelligence and Visualization Tools:** Tableau and Looker, with demand counts of 230 and 49 respectively, and average salaries around $99,288 and $103,795, highlight the critical role of data visualization and business intelligence in deriving actionable insights from data.
-- **Database Technologies:** The demand for skills in traditional and NoSQL databases (Oracle, SQL Server, NoSQL) with average salaries ranging from $97,786 to $104,534, reflects the enduring need for data storage, retrieval, and management expertise.
-
-
-### Complete Data Visualization for Data Job Analysis in the Year 2023
-![Data Visual Using PowerBI](assets/Data_visual_Data_Job_Analysis_2023.png)
-*The data visual was created using Power BI with data pulled from available datasets. It is not interactive, as the data is incomplete. The goal is to explore Power BI further and enhance my skills.*
-[Download Power BI File](assets/SQL_DATA_JOB_ANALYSIS_BI.pbix)
-
-
-
-# What I Learned
-Throughout this adventure, I've turbocharged my SQL toolkit with some serious firepower:
-
-**🧩 Complex Query Crafting:** Mastered the art of advanced SQL, merging tables like a pro and wielding WITH clauses for ninja-level temp table maneuvers.  
-**📊 Data Aggregation:** Got cozy with GROUP BY and turned aggregate functions like COUNT() and AVG() into my data-summarizing sidekicks.  
-**💡 Analytical Wizardry:** Leveled up my real-world puzzle-solving skills, turning questions into actionable, insightful SQL queries.
-
-# Conclusion
-### Insights
-
-From the analysis, several general insights emerged:
-
-1. **Top-Paying Data Analyst Jobs:** The highest-paying remote data analyst positions reach up to **$650,000**, demonstrating significant earning potential in the field.
-2. **Skills for Top-Paying Jobs:** Advanced **SQL proficiency** is a common requirement for high-compensation jobs, solidifying its status as a foundational skill for top earners.
-3. **Most In-Demand Skills:** Beyond salary potential, **SQL** appears most frequently in job postings, making it indispensable for aspiring and current data analysts.
-4. **Skills with Higher Salaries:** Specialized tools like **SVN** and **Solidity** correlate with the highest average salaries, highlighting the value of targeted expertise in competitive markets.
-5. **Optimal Skills for Job Market Value:** Leading in both **demand** and **salary potential**, **SQL** emerges as the most strategic skill for data analysts to maximize career opportunities and compensation.
-
-
-
-### Closing Thoughts
-This real-world SQL project represented a pivotal step in my data analytics development. Coming straight from certification training, the practical experience substantially elevated both my technical SQL proficiency and professional self-assurance. The analysis uncovered crucial market insights - especially SQL's industry dominance and the premium placed on specialized skills - which now actively inform my ongoing education and career planning. These results provide a strategic roadmap: aspiring data professionals can gain a competitive advantage by concentrating on high-impact, sought-after abilities, all while maintaining the adaptive learning approach essential in our rapidly changing field.
-
-
-
-# NEW
-# Introduction
-Data Analyst Job Market Analysis - Asia-Pacific Focus *(Specifically: Singapore, Hongkong, Thailand, Philippines, Japan, Taiwan, China, South Korea, Australia, New Zealand)*
+Data Analyst Job Market Analysis - Asia-Pacific Focus *(Specifically: Singapore, Thailand, Philippines, Japan, Taiwan, China, South Korea, Australia, New Zealand)*
 
 This project explores the Data Analyst job market in the Asia-Pacific region. It highlights job availability, top-paying companies, in-demand skills, and remote vs on-site work trends. The goal is to help aspiring and current data analysts identify career opportunities and target the most valuable skills.
 
@@ -272,18 +18,20 @@ SELECT
 	job_country,                      
 	COUNT(job_country) as job_count   
 FROM job_postings_fact
-WHERE job_country IN ('Singapore', 'Hongkong', 'Thailand',
-'Philippines', 'Japan', 'Taiwan', 'China','South Korea', 
+WHERE job_country IN ('Singapore','Thailand','Philippines', 'Japan', 'Taiwan', 'China','South Korea', 
 'Australia', 'New Zealand')
 GROUP BY job_country
 ORDER BY job_count DESC;
 ```
 **Findings:**
-- **Australia, Japan,** and **Singapore** lead in job availability.
+- **Singapore** and the **Philippines** lead the APAC region in job availability, with over 6,500 and 4,000 listings respectively. Australia and Thailand also show strong demand.
 - Mature markets offer significantly more roles compared to emerging markets.
 
 **Visualization:**  
-Bar chart showing job count per country.
+
+![Job Availability by Country](assets/1_job_available_by_location.png)
+
+*Bar chart showing Job Availability by Country.*
 
 ### 2. Top-Paying Companies for Data Analyst Roles
 Filtered companies offering the **highest salaries** based on available job posting data.
@@ -298,12 +46,10 @@ FROM job_postings_fact AS jpf
 LEFT JOIN company_dim AS cd 
     ON jpf.company_id = cd.company_id
 WHERE 
-    jpf.job_title_short = 'Data Analyst' 
-    AND jpf.job_country IN ('Singapore', 'Hongkong', 'Thailand',
-    'Philippines', 'Japan', 'Taiwan', 'China', 
-    'South Korea','Australia', 'New Zealand')
-    AND jpf.salary_year_avg IS NOT NULL
-    AND jpf.job_schedule_type = 'Full-time'
+jpf.job_title_short = 'Data Analyst' 
+AND jpf.job_country IN ('Singapore','Thailand','Philippines','Japan', 'Taiwan', 'China', 'South Korea','Australia', 'New Zealand')
+AND jpf.salary_year_avg IS NOT NULL
+AND jpf.job_schedule_type = 'Full-time'
 GROUP BY 
     jpf.job_title_short, 
     jpf.job_country, 
@@ -313,29 +59,30 @@ GROUP BY
 ORDER BY jpf.salary_year_avg DESC;
 ```
 **Findings:**
+- The highest average salaries are offered by **Anaxyn Project ($180K)**, **Lunit ($177K)**, and **Agoda & Capco ($165K each)**, reflecting strong investment in data talent across fintech, biotech, and tech sectors.
 - Top-paying companies are largely in **finance and technology sectors**.
 - Companies investing in **digital transformation** are leading in compensation packages.
 
 **Visualization:**  
-Bar chart displaying the top 10 companies by average salary.
+![Top Paying Companies](assets/2_top_paying_company.png)
+
+*Table chart displaying the top companies by average salary.*
 
 ### 3. In-Demand Skills for Data Analysts
 Identified the skills most frequently required in job postings.
 ```sql
 WITH RankedSkills AS (
 SELECT 
-skills,
-COUNT(sjd.job_id) AS demand_count,
-RANK() OVER (ORDER BY COUNT(sjd.job_id) DESC) AS ranking
+    skills,
+    COUNT(sjd.job_id) AS demand_count,
+    RANK() OVER (ORDER BY COUNT(sjd.job_id) DESC) AS ranking
 FROM job_postings_fact AS jpf
 INNER JOIN skills_job_dim AS sjd ON jpf.job_id = sjd.job_id
 INNER JOIN skills_dim AS sd ON sjd.skill_id = sd.skill_id
 WHERE
-	job_title_short = 'Data Analyst' 
-	AND job_country IN ('Singapore', 'Hongkong', 'Thailand',
-    'Philippines', 'Japan', 'Taiwan', 'China',
-    'South Korea', 'Australia', 'New Zealand')
-GROUP BYskills
+job_title_short = 'Data Analyst' 
+AND job_country IN ('Singapore','Thailand','Philippines', 'Japan', 'Taiwan', 'China','South Korea', 'Australia', 'New Zealand')
+GROUP BY skills
 )
 
 SELECT *
@@ -344,11 +91,13 @@ WHERE ranking <= 5
 ORDER BY ranking;
 ```
 **Findings:**
-- **SQL, Python, Excel, and Tableau** are consistently top-listed skills.
+**SQL, Excel, and Python** are the most sought-after skills, followed by **Tableau** and **Power BI** — highlighting the importance of both data handling and business intelligence tools in the region.
 - **Data Visualization and Business Intelligence** tools continue to grow in demand.
 
 **Visualization:**  
-Horizontal bar chart displaying the top 10 most in-demand skills.
+![In-Demand Skills](assets/3_in_demand_skills.png)
+
+*Tree map visualizing in-demand top skills in APAC region.*
 
 ### 4. Work Arrangement: Remote vs On-Site
 Compared the distribution between remote and on-site job opportunities.
@@ -359,19 +108,28 @@ SELECT
     COUNT(CASE WHEN job_work_from_home = TRUE THEN job_id END) AS remote
 FROM job_postings_fact
 WHERE 
-    job_title_short = 'Data Analyst' AND
-    job_country IN ('Singapore', 'Hongkong', 'Thailand',
-    'Philippines', 'Japan', 'Taiwan', 'China',
-    'South Korea', 'Australia', 'New Zealand')
+job_title_short = 'Data Analyst' AND
+job_country IN ('Singapore','Thailand','Philippines', 'Japan', 'Taiwan', 'China','South Korea', 'Australia', 'New Zealand')
 GROUP BY job_country
-ORDER BY country;
+ORDER BY on_site DESC;
 ```
 **Findings:**
 - **On-site roles** are more common, but remote opportunities are expanding, especially in Australia and Singapore.
 - **Remote roles** often require a higher degree of technical self-sufficiency.
 
-**Visualization:**  
-Donut chart illustrating remote vs. on-site job distribution.
+| Country       | On-Site Jobs | Remote Jobs |
+|---------------|--------------|-------------|
+| Singapore     | 6,579        | 63          |
+| Philippines   | 4,164        | 606         |
+| Australia     | 1,507        | 153         |
+| Thailand      | 1,437        | 43          |
+| New Zealand   | 513          | 30          |
+| Japan         | 340          | 42          |
+| South Korea   | 330          | 5           |
+| Taiwan        | 273          | 37          |
+| China         | 242          | 10          |
+
+*Table reflects the number of available jobs by work mode across APAC regions.*
 
 ### Complete Data Visualization for Data Job Analysis in the Year 2023
 ![Data Visual Using PowerBI](assets/Data_visual_APAC_Data_Job_Analysis_Y2023.png)
@@ -379,11 +137,25 @@ Donut chart illustrating remote vs. on-site job distribution.
 *The data visual was created using Power BI with data pulled from available datasets. The goal is to explore Power BI further and enhance my skills.*
 [Download Power BI File](assets/APAC_Data_Analyst_Job_Insights_and_Opportunities.pbix)
 
-# Key Insights
-- **Australia, Japan, and Singapore** offer the most **Data Analyst opportunities**.
-- **Top-paying employers** are focused on **finance and digital technologies**.
-- Core technical skills such as **SQL and Python** are essential.
-- **Remote job** opportunities are **increasing** but are still **secondary** to **on-site roles**.
+## 🔍 Key Insights
+
+1. **📍 Singapore and the Philippines Dominate Job Availability**
+   - Singapore leads with **6,579** on-site roles, followed by the Philippines with **4,164**.
+   - These two countries alone account for over **60% of total job listings** in the APAC region analyzed.
+
+2. **🏢 On-Site Jobs Significantly Outnumber Remote Opportunities**
+   - On-site roles are the norm, comprising **over 90%** of job listings across all countries.
+   - The Philippines shows the strongest remote presence (606 roles), indicating a more flexible or outsourced workforce model.
+
+3. **💼 Top Employers Are Offering Premium Salaries**
+   - Companies like **Anaxyn Project ($180K)**, **Lunit ($177K)**, and **Agoda/Capco ($165K)** are leading in compensation.
+   - This trend reflects strong competition for data talent in sectors such as **biotech, tech, and fintech**.
+
+4. **💡 Core Data Skills Are Consistently In-Demand**
+   - **SQL** is the most sought-after skill (**7,361 mentions**), followed by **Excel**, **Python**, and **Tableau**.
+   - Business intelligence tools like **Power BI** and Tableau highlight the dual importance of data wrangling and dashboarding.
+
+> 🚀 These insights suggest strong opportunities for data professionals in Southeast Asia, especially those skilled in SQL, Python, and BI tools — and open to on-site roles.
 
 # Lessons Learned
 This project enhanced my technical and analytical skills:
@@ -394,5 +166,7 @@ This project enhanced my technical and analytical skills:
 - Structuring a data analysis project from start to finish
 
 # Conclusion
-This analysis provides a strategic view of the Asia-Pacific data analyst market.  
-It emphasizes the importance of focusing on high-opportunity countries, targeting leading employers, and building strong technical foundations.
+This analysis provides a strategic view of the Asia-Pacific data analyst market. It emphasizes the importance of focusing on high-opportunity countries, targeting leading employers, and building strong technical foundations.
+While on-site jobs currently dominate the region, it's important to note that the data reflects the 2023 job landscape.  
+Given global shifts toward hybrid and remote work, it's highly likely that **remote job opportunities will continue to grow** in the coming years, particularly in digitally mature markets like Singapore, the Philippines, and Australia.
+> Staying adaptable and upskilling in remote collaboration tools, cloud platforms, and cross-border communication will be key to thriving in the evolving APAC data job market.

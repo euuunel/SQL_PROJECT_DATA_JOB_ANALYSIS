@@ -6,15 +6,15 @@ aiming to stay competitive in the field.
 
 WITH RankedSkills AS (
 SELECT 
-skills,
-COUNT(sjd.job_id) AS demand_count,
-RANK() OVER (ORDER BY COUNT(sjd.job_id) DESC) AS ranking
+  skills,
+  COUNT(sjd.job_id) AS demand_count,
+  RANK() OVER (ORDER BY COUNT(sjd.job_id) DESC) AS ranking
 FROM job_postings_fact AS jpf
 INNER JOIN skills_job_dim AS sjd ON jpf.job_id = sjd.job_id
 INNER JOIN skills_dim AS sd ON sjd.skill_id = sd.skill_id
 WHERE
 	job_title_short = 'Data Analyst' 
-	AND job_country IN ('Singapore', 'Hongkong', 'Thailand',
+	AND job_country IN ('Singapore', 'Hong Kong', 'Thailand',
   'Philippines', 'Japan', 'Taiwan', 'China',
   'South Korea', 'Australia', 'New Zealand')
 GROUP BY skills
